@@ -1,0 +1,16 @@
+LOW_TIR = 'low_TIR'
+OK_TIR = 'ok_TIR'
+HIGH_TIR = 'high_TIR'
+TIR_DROPDOWN = 'TIR-dropdown'
+
+GLUCOSE_GRAPH = 'glucose-graph'
+CURRENT_GLUCOSE = 'current-glucose'
+CURRENT_GLUCOSE_TIME = 'current-glucose-time'
+CURRENT_GLUCOSE_CONTAINER = 'current-glucose-container'
+GLUCOSE_HISTORY_RADIOS = 'glucose-history-radios'
+UPDATE_GRAPH_BUTTON = 'update-graph'
+AUTOUPDATE_INTERVAL = 'interval-component'
+DATA_STORAGE = 'data-storage'
+MINUTE_INTERVAL = 'minute-interval'
+UPDATE_BUTTON = 'update-graph'
+

@@ -1,0 +1,5 @@
+__pycache__
+.DS_Store
+*.pyc
+export_docker.sh
+docker-compose.yaml

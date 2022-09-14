@@ -1,0 +1,6 @@
+__pycache__
+cache
+data
+runMe.sh
+docker-compose.yaml
+export_docker.sh
