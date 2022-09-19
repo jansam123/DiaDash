@@ -1,4 +1,3 @@
-
 from datetime import datetime
 from typing import Optional
 import pandas as pd
@@ -252,11 +251,11 @@ class GlucoseTableGenerator():
 
 
 def main(args: argparse.Namespace):
-    data_parser = GlucoseTableGenerator(reading_folder=args.folder, start_date=args.start_date,
-                                        end_date=args.end_date, insulin_folder=args.insulin_folder)
+    table_generator = GlucoseTableGenerator(reading_folder=args.folder, insulin_folder=args.insulin_folder)
+    loading_sucess = table_generator.load_data(start_date=args.start_date, end_date=args.end_date)
 
-    data_parser.to_pdf('assets/table.pdf')
-    data_parser.to_html('assets/table.html')
+    table_generator.to_pdf('assets/table.pdf')
+    table_generator.to_html('assets/table.html')
     # print(data_parser.data)
 
 
