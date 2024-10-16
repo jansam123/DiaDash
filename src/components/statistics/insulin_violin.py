@@ -31,10 +31,10 @@ def render(app: Dash) -> html.Div:
             return html.Div([dcc.Graph(figure=fig)])
 
         df = pd.DataFrame(data)
-        df = df[['value', 'time']]
+        df = df[['value', 'time', 'day']]
 
         fig = go.Figure()
-        df['time'] = pd.to_datetime(df['time']).dt.time
+        df['time'] = pd.to_datetime(df['time'], format='%H:%M:%S').dt.time
         period_df = split_into_periods(df, 'time')
         for period, name, color in zip(period_df, ["morning", "lunch", "evening"], ["#ab63fa", "#19d3f3", "#FF6692"]):
             mean = period['value'].mean()

@@ -7,7 +7,6 @@ from datetime import datetime
 
 
 def render(app: Dash) -> html.Div:
-
     @app.callback(
         Output(ids.INSULIN_DATA_STORAGE, 'data'),
         State(ids.STAT_DATE_PICKER, 'start_date'),
@@ -15,10 +14,13 @@ def render(app: Dash) -> html.Div:
         Input(ids.UPDATE_STATS, 'n_clicks'),)
     def load_data(start, end, n_clicks) -> dict:
         df = get_insulin_data(datetime.fromisoformat(end), datetime.fromisoformat(start),
-                              folder=const.INSULIN_FOLDER, cols=['value', 'time', 'day'])
+                              folder=const.INSULIN_FOLDER, cols=['value', 'time', 'day', 'primed'])
         if df is None:
-            return {}
-        # df["range"] = df["mmol_l"].apply(lambda x: 'high' if x > RANGE[0] else 'low' if x < RANGE[1] else 'ok')
+            return {'value': [], 'time': [], 'day': []}
+        
+        df = df[df['primed'] == False]
+        df = df.drop(axis=1, labels='primed')
+        
         out = df.to_dict('records')
         return out
 

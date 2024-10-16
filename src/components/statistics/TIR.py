@@ -26,17 +26,17 @@ def render(app: Dash) -> html.Div:
 
         df = df[['mmol_l', 'time']]
 
-        df['time'] = pd.to_datetime(df['time'])
+        df['time'] = pd.to_datetime(df['time'], format='%H:%M:%S')
         df['hour'] = df['time'].dt.hour + df['time'].dt.minute / 60 + df['time'].dt.second / 3600
         df['hour'] = df['hour'].astype(int)
         bins = [0, 3.9, 10, 25]
         df['mmol_l'] = pd.cut(df['mmol_l'], bins=bins, labels=['low', 'ok', 'high'])
         df['hour'] = pd.cut(df['hour'], bins=[0, 8, 12, 18, 24], labels=['morning', 'lunch', 'evening', 'night'])
-        total = df.groupby('hour').count()
+        total = df.groupby('hour', observed=True).count()
         
         figs = []
         for rag in ['low', 'ok', 'high']:
-            count = df.query('mmol_l == @rag').groupby('hour').count()
+            count = df.query('mmol_l == @rag').groupby('hour', observed=True).count()
             count /= total/100
             figs += [go.Bar(x=count.index, y=count['mmol_l'], name=rag, marker_color=const.color_map[rag], text=count['mmol_l'],
                              textposition='auto')]

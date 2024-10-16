@@ -22,16 +22,11 @@ def render(app: Dash) -> html.Div:
         return True
 
     @app.callback(
-        Output(ids.UPLOAD_SUCESS, 'children'),
-        Input(ids.UPLOAD_DATA, 'contents'),
-        State(ids.UPLOAD_DATA, 'filename'),
-        State(ids.UPLOAD_DATA, 'last_modified'),
+        Output(ids.UPLOAD_SUCESS_CLARITY, 'children'),
+        Input(ids.UPLOAD_DATA_CLARITY, 'contents'),
+        State(ids.UPLOAD_DATA_CLARITY, 'filename'),
+        State(ids.UPLOAD_DATA_CLARITY, 'last_modified'),
         prevent_initial_call=True,
-        # background=True,
-        # manager=background_callback_manager,
-        # running=[
-        #     (Output(ids.UPLOAD_SUCESS, "children"), html.Div([html.Span('Loading...', className='badge bg-info')]), html.Div()),
-        # ],
         )
     def update_output(list_of_contents, list_of_names, list_of_dates)->html.Div:
         if list_of_contents is None:
@@ -50,12 +45,13 @@ def render(app: Dash) -> html.Div:
     return html.Div([
         html.Div([
             dbc.Row([
-                dbc.Col(html.Div([html.H5('Import Data', className='card-title'), ]), width=9,  align="start"),
-                dbc.Col(html.Div(id=ids.UPLOAD_SUCESS), width=3,  align="start")
+                dbc.Col(html.Div([html.H5('Import Clarity Data', className='card-title'), ]), width=8,  align="start"),
+                dbc.Col(html.Div(id=ids.UPLOAD_SUCESS_CLARITY), width=1,  align="start"),
+                dbc.Col(html.Img(src='assets/images/clarity.png', style={'height': '30px'}), width=3,  align="start"),
             ]),
             html.Div([
                 dcc.Upload(
-                    id=ids.UPLOAD_DATA,
+                    id=ids.UPLOAD_DATA_CLARITY,
                     children=html.Div([html.I(className="fa-solid fa-cloud-arrow-up"),
                         ' Drag and Drop or ',
                         html.A('Select Files', className='text-primary')
@@ -71,7 +67,7 @@ def render(app: Dash) -> html.Div:
                     },
                     multiple=True
                 ),
-                html.Div(id='output-data-upload'),
+                html.Div(id='output-data-upload-clarity'),
             ]),
         ], className='card-body'),
     ], className='card border-primary')

@@ -23,6 +23,7 @@ class DexcomParser(AbstractParser):
         insulin['time'] = insulin['datetime'].map(lambda x: x.strftime('%H:%M:%S'))
         insulin['day'] = insulin['datetime'].map(lambda x: x.strftime('%d-%m-%Y'))
         insulin = insulin.drop(axis=1, labels='datetime')
+        insulin['primed'] = False
         return insulin
 
     @property

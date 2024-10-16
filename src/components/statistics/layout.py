@@ -1,5 +1,5 @@
 from dash import Dash, html
-from . import date_range, glucose_data_storage, trend_plot, insulin_data_storage, insulin_violin, TIR, mode_switcher, histogram, pie_TIR, heatmap, metrics
+from . import date_range, glucose_data_storage, insulin_dosage_per_day, trend_plot, insulin_data_storage, insulin_violin, TIR, mode_switcher, pie_TIR, heatmap, metrics
 import dash_bootstrap_components as dbc
 from . import ids
 from dash.dependencies import Input, Output
@@ -27,7 +27,7 @@ def create_layout(app: Dash) -> html.Div:
                     html.Div([trend_plot.render(app)]),
                 ], width=5),
                 dbc.Col([
-                    html.Div([histogram.render(app)]),
+                    html.Div([heatmap.render(app)]),
                 ], width=4),
             ], className='mt-4'),
             dbc.Row([
@@ -42,14 +42,14 @@ def create_layout(app: Dash) -> html.Div:
             ], className='mt-4 mb-2'),
             dbc.Row([
                 dbc.Col([
-                    html.Div([heatmap.render(app)]),
+                    html.Div([TIR.render(app)]),
+                ], width=3),
+                dbc.Col([
+                    html.Div([insulin_dosage_per_day.render(app)]),
                 ], width=5),
                 dbc.Col([
                     html.Div([insulin_violin.render(app)]),
                 ], width=4),
-                dbc.Col([
-                    html.Div([TIR.render(app)]),
-                ], width=3),
             ]),
         ])
     ], id=ids.PLOT_CONTAINER)

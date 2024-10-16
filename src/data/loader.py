@@ -51,6 +51,9 @@ def get_insulin_data(start: datetime, end: datetime, folder: str, cols: list[str
         filename = os.path.join(folder, year, f"{date.strftime('%Y-%m')}.csv")
         if os.path.isfile(filename):
             read_csv_files.append(pd.read_csv(filename, dtype=INSULIN_DATA_SCHEMA, usecols=cols))
+    if start.strftime('%Y-%m') == end.strftime('%Y-%m'):
+        if os.path.isfile(os.path.join(folder, start.strftime('%Y'), f"{start.strftime('%Y-%m')}.csv")):
+            read_csv_files.append(pd.read_csv(os.path.join(folder, start.strftime('%Y'), f"{start.strftime('%Y-%m')}.csv"), dtype=INSULIN_DATA_SCHEMA, usecols=cols))
     if len(read_csv_files) == 0:
         return None
     df = pd.concat(read_csv_files)

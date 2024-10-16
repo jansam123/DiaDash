@@ -4,7 +4,7 @@ def html_to_pdf(html_file_name:str, file_name: str):
     options = {
         'page-size': 'A4',
         'orientation': 'landscape',
-        'margin-top': '0.2in',
+        'margin-top': '0.1in',
         'margin-right': '0.5in',
         'margin-bottom': '0.2in',
         'margin-left': '0.75in',
@@ -21,7 +21,7 @@ def html_to_pdf(html_file_name:str, file_name: str):
         'no-outline': None
     }
 
-    with open(html_file_name, 'r') as f:
+    with open(html_file_name) as f:
         pdfkit.from_file(input=f, output_path=file_name, options=options)
     f.close()
 

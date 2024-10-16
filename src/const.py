@@ -1,5 +1,6 @@
 
 DEXCOM_EXPORT_FOLDER = 'data/dexcom_export'
+GLOOKO_EXPORT_FOLDER = 'data/glooko_export'
 DATA_FOLDER = 'data/glucose'
 INSULIN_FOLDER = 'data/insulin'
 
@@ -11,13 +12,15 @@ INSULIN_FOLDER = 'data/insulin'
 
 RANGE = [10.0, 3.9]
 
+
 def check_range(x):
-    if x > RANGE[0] :
+    if x > RANGE[0]:
         return 'high'
     elif x < RANGE[1]:
         return 'low'
     else:
         return 'ok'
+
 
 GLUCOSE_RELOAD_INTERVAL = 1*60  # in seconds
 
@@ -61,14 +64,18 @@ PERIODS: list[tuple[str, str]] = [
 ]
 
 INDEX_NAMES: list[str] = ['rok', 'mesiac', 'čas', 'deň']
-PERIOD_LABELS: list[str] = ['ráno', 'obed', 'večer', 'noc']
+PERIOD_LABELS: list[str] = ['RÁNO', 'OBED', 'VEČER', 'NOC']
 MONTHS: list[str] = ['január', 'február', 'marec', 'apríl', 'máj', 'jún',
                      'júl', 'august', 'september', 'október', 'november', 'december']
+MONTHS = [month.upper() for month in MONTHS]
 
 INDEX_NAMES_EN: list[str] = ['year', 'month', 'time', 'days']
-PERIOD_LABELS_EN: list[str] = ['morning', 'lunch', 'dinner', 'night']
+PERIOD_LABELS_EN: list[str] = ['8h', '12h', '18h', '23h']
 MONTHS_EN: list[str] = ['january', 'february', 'march', 'april', 'may', 'june',
                         'july', 'august', 'september', 'october', 'november', 'december']
+MONTHS_EN = [month.upper() for month in MONTHS_EN]
+EVENT_TYPE: list[str] = ['INZULÍN', 'GLYKÉMIA']
+EVENT_TYPE_EN: list[str] = ['INSULIN', 'GLUCOSE']
 
 HTML_HEADER = """
 <!DOCTYPE html>
@@ -77,6 +84,7 @@ HTML_HEADER = """
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="table.css"/>
     <title>Glucose Table</title>
 </head>
 <body>

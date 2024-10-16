@@ -36,7 +36,7 @@ def render(app: Dash) -> html.Div:
         loading_sucess = table_generator.load_data(start_date=start_date, end_date=end_date)
         if not loading_sucess:
             return html.Div('Error')
-        table_generator.to_html(source_file)
+        table_generator.to_html(source_file, dark_bkg=True)
         
         return html.Div(
             children=[

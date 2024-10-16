@@ -26,62 +26,65 @@ def render(app: Dash) -> html.Div:
         df = pd.DataFrame(data)
         df = df[['time', 'mmol_l']]
 
-        df['time'] = pd.to_datetime(df['time'])
-
-        group = df.groupby(pd.Grouper(key='time', freq='15min'))
-        df_mean = group.mean()
-        mean = df_mean['mmol_l'].mean()
+        df['time'] = pd.to_datetime(df['time'], format='%H:%M:%S')
+        df['seconds_of_day'] = df['time'].dt.hour * 3600 + df['time'].dt.minute * 60 + df['time'].dt.second
+        bin_size = 1200  # 10 minutes in seconds
+        df['time_bin'] = (df['seconds_of_day'] // bin_size) * bin_size
+        df['time_bin'] = pd.to_datetime(df['time_bin'], unit='s').dt.time
         
-        fig = px.scatter(df_mean,
-                         x=df_mean.index,
-                         y=['mmol_l'],
-                         trendline="lowess",
-                         trendline_options=dict(frac=0.1),
-                         trendline_color_override='#19d3f3',
-                         )
-        fig.data[0]['mode'] = 'none'
-        fig.data[1]['line']['width'] = 3
         
+        grouped = df.groupby('time_bin')['mmol_l'].agg(
+            median='median',
+            p25=lambda x: x.quantile(0.25),
+            p75=lambda x: x.quantile(0.75),
+            p10=lambda x: x.quantile(0.10),
+            p90=lambda x: x.quantile(0.90)
+        ).reset_index()
+        
+        fig = go.Figure()
 
-        fig.add_trace(go.Bar(x=df_mean.index,
-                             y=df_mean['mmol_l'] - mean,
-                             base=mean,
-                             marker=dict(
-                                 color=df_mean['mmol_l'] - mean,
-                                 colorscale=[(0.00, '#EF553B'),   (0.17, "#EF553B"),
-                                             (0.17, "#fa8dac"), (0.25, "#fa8dac"),
-                                             (0.25, "#aeaeae"),  (0.615, "#aeaeae"),
-                                             (0.615, "#FECB52"),  (0.83, "#FECB52"),
-                                             (0.83, "#FFA15A"),  (1.00, "#FFA15A"), ],
-                             )))
+        fig.add_trace(go.Scatter(
+            x=grouped['time_bin'], y=grouped['median'],
+            mode='lines', name='Median',
+            line=dict(color='cyan')
+        ))
 
-        fig.add_annotation(
-            text=f'Average:\n {mean:.1f} mmol/L',
-            # yanchor="top",
-            # xanchor="right",
-            xref="paper", 
-            yref="paper",
-            y=0.98,
-            x=1,
-            font=dict(
-                size=15,
-                color='white'
-            ),
-            bgcolor='rgba(28,45,228,0.5)',
-            bordercolor="#1c2de4",
-            borderwidth=2,
-            showarrow=False,
-        )
+        # Add 25-75% shaded area
+        fig.add_trace(go.Scatter(
+            x=grouped['time_bin'].tolist() + grouped['time_bin'].tolist()[::-1], 
+            y=grouped['p75'].tolist() + grouped['p25'].tolist()[::-1],
+            fill='toself', fillcolor='rgba(0, 100, 255, 0.2)',
+            line=dict(color='rgba(255,255,255,0)'), 
+            showlegend=False, name='25-75% Percentile'
+        ))
 
-        fig.update_layout(showlegend=False)
-        fig.update_layout(title='Average Glucose')
-        fig.update_layout(height=300)
-        fig.update_layout(yaxis_title='Glucose (mmol/L)')
-        fig.update_layout(xaxis={
-            'tickformat': '%H:%M',
-        })
+        # Add 10-90% shaded area
+        fig.add_trace(go.Scatter(
+            x=grouped['time_bin'].tolist() + grouped['time_bin'].tolist()[::-1], 
+            y=grouped['p90'].tolist() + grouped['p10'].tolist()[::-1],
+            fill='toself', fillcolor='rgba(0, 100, 255, 0.2)',
+            line=dict(color='rgba(255,255,255,0)'), 
+            showlegend=False, name='10-90% Percentile'
+        ))
+        
         fig.add_hline(y=5, line_width=1, line_color=const.color_map['low'])
         fig.add_hline(y=9, line_width=1, line_color=const.color_map['high'])
+        
+        fig.update_layout(
+        title='Glucose Time Profile',
+        xaxis_title='Time of Day',
+        yaxis_title='Glucose (mmol/L)',
+        xaxis=dict(
+        tickformat='%H:%M',
+        dtick=6,  # 1-hour intervals in milliseconds
+        tickmode='linear',
+        # tickformat='%H',  # Format to show hours only
+        ticks='outside'
+        ),
+        height=300,
+        showlegend=False,
+        )
+
 
         return html.Div([dcc.Graph(figure=fig)])
 

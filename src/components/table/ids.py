@@ -9,7 +9,5 @@ HTML_DOWNLOAD_BUTTON = 'html-download-button'
 PDF_DOWNLOAD_BUTTON = 'pdf-download-button'
 TABLE_DOWNLOAD = 'table-download'
 LANGUAGE_DROPDOWN = 'language-dropdown'
-UPLOAD_DATA = 'upload-data'
-UPLOAD_SUCESS = 'upload-success'
-UPLOAD_DATA_BADGE = 'upload-data-badge'
+
 

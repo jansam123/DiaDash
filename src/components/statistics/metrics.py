@@ -30,9 +30,10 @@ def render(app: Dash) -> html.Div:
         TIR = TIR.to_dict()
         average = df['mmol_l'].mean()
 
-        in_df = pd.DataFrame(insulin_data)[['value', 'time']]
-        average_insulin = in_df['value'].mean()
-        in_df['time'] = pd.to_datetime(in_df['time']).dt.time
+        in_df = pd.DataFrame(insulin_data)
+        in_df = in_df[['value', 'time', 'day']]
+        average_insulin_per_day = in_df.groupby('day')['value'].sum().mean()
+        in_df['time'] = pd.to_datetime(in_df['time'], format='%H:%M:%S').dt.time
         period_df = split_into_periods(in_df, 'time')
         average_insulin_per_period = [per['value'].mean() for per in period_df]
 
@@ -53,8 +54,8 @@ def render(app: Dash) -> html.Div:
                     ]),
                     dbc.Col([
                         html.Div([
-                            html.H5('Average Insulin Dosage', style={'color': color}),
-                            html.H2(f'{average_insulin:.1f} IU', style={'color': color}),
+                            html.H5('Average Insulin Dosage per Day', style={'color': color}),
+                            html.H2(f'{average_insulin_per_day:.1f} IU', style={'color': color}),
                         ], style={'text-align': 'center'}),
                     ]),
                     dbc.Col([

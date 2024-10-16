@@ -1,0 +1,5 @@
+UPLOAD_DATA_CLARITY = 'upload-data-clarity'
+UPLOAD_SUCESS_CLARITY = 'upload-sucess-clarity'
+UPLOAD_DATA_GLOOKO = 'upload-data-glooko'
+UPLOAD_SUCESS_GLOOKO = 'upload-sucess-glooko'
+UPLOAD_DATA_BADGE = 'upload-data-badge'

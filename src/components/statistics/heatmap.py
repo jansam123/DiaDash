@@ -6,6 +6,7 @@ from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 import plotly.express as px
 import pandas as pd
+import numpy as np
 from . import figure_theme
 import plotly.io as pio
 from .utils import split_into_periods
@@ -31,12 +32,18 @@ def render(app: Dash) -> html.Div:
         df['datetime'] = pd.to_datetime(df['datetime'])
         df = df.groupby(pd.Grouper(key='datetime', freq='1h')).mean()
         df = df.pivot_table(index=df.index.date, columns=df.index.hour, values='mmol_l')
-
-        fig = px.imshow(df.T, color_continuous_scale='Turbo', color_continuous_midpoint=7)
-
+        color_map = {'Red': 'red', 'Green': 'green', 'Yellow': 'yellow'}
+        # set the color scale to have only 4 colors
+        fig = go.Figure(data=go.Heatmap(
+            z=df.T,
+            colorscale=[[0, 'red'], [0.5, 'green'], [0.75, 'yellow'], [1, 'orange']],
+            zmin=0,
+            zmax=15
+        ))
+        
         #set yaxis label
         fig.update_yaxes(title_text='Time', tickvals=list(range(0, 23, 2))) 
-        fig.update_layout(height=400)
+        fig.update_layout(height=300)
         
         fig.update_layout(xaxis_showgrid=False, yaxis_showgrid=False)
         fig.update_layout(title='Glucose Patterns')

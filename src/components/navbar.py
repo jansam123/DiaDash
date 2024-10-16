@@ -8,9 +8,10 @@ def render(app: Dash) -> html.Div:
 
     nav_content = [
         # dbc.NavItem(dbc.NavLink("Current Glucose", href="/", active='exact')),
-        dbc.NavItem(dbc.NavLink(html.I(className="fa-regular fa-house"), href="/", active='exact')),
-        dbc.NavItem(dbc.NavLink(html.I(className="fa-regular fa-table"), href="/table", active='exact')),
+        dbc.NavItem(dbc.NavLink(html.I(className="fa-solid fa-house"), href="/", active='exact')),
+        dbc.NavItem(dbc.NavLink(html.I(className="fa-solid fa-table"), href="/table", active='exact')),
         dbc.NavItem(dbc.NavLink(html.I(className="fa-solid fa-chart-line"), href="/statistics", active='exact')),
+        dbc.NavItem(dbc.NavLink(html.I(className="fa-solid fa-upload"), href="/upload", active='exact')),
     ]
 
     navbar = dbc.Nav(

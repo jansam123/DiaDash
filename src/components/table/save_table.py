@@ -2,6 +2,7 @@ from dash import Dash, html, dcc
 import dash_bootstrap_components as dbc
 from src.const import *
 from datetime import datetime
+import os
 from . import ids
 from dash.dependencies import Input, Output, State
 from src.table_generator.GlucoseTableGenerator import GlucoseTableGenerator
@@ -16,13 +17,23 @@ def render(app: Dash) -> html.Div:
         def download(start_date, end_date, n_clicks, language):
             start_date = datetime.fromisoformat(start_date)
             end_date = datetime.fromisoformat(end_date)
+            for file in os.listdir('assets/downloads'):
+                os.remove(f'assets/downloads/{file}')
             file_name = f'assets/downloads/glucose_table.{file_extension}'
             table_generator = GlucoseTableGenerator(
                 reading_folder=DATA_FOLDER, language=language, insulin_folder=INSULIN_FOLDER)
             loading_sucess = table_generator.load_data(start_date=start_date, end_date=end_date)
             if not loading_sucess:
                 return {'content': 'Error', 'filename': 'error.txt'}
-            getattr(table_generator, f'to_{file_type}')(file_name)
+            # getattr(table_generator, f'to_{file_type}')(file_name)
+            if file_type == 'excel':
+                table_generator.to_excel(file_name)
+            elif file_type == 'html':
+                table_generator.to_html(file_name, dark_bkg=False)
+            elif file_type == 'pdf':
+                table_generator.to_pdf(file_name)
+            else:
+                return {'content': 'Error', 'filename': 'error.txt'}
             return dcc.send_file(file_name)
         return download
 
