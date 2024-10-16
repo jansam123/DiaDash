@@ -17,6 +17,7 @@ RUN mkdir /app/data
 RUN mkdir /app/data/glucose
 RUN mkdir /app/data/insulin
 RUN mkdir /app/data/dexcom_export
+RUN mkdir /app/data/glooko_export
 EXPOSE 80
 
 CMD ["gunicorn", "src.app:server", "-b", ":80"]

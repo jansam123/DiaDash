@@ -11,7 +11,7 @@ class GlookoParser(AbstractParser):
     def _parse(self, file) -> pd.DataFrame:
         df = pd.read_csv(file, skiprows=1, header=0)
         df = df.rename(columns={'Timestamp': 'datetime'})
-        df['datetime'] = pd.to_datetime(df['datetime'], format='%Y-%m-%dT%H:%M:%S')
+        df['datetime'] = pd.to_datetime(df['datetime'], format='%Y-%m-%d %H:%M')
         return df
 
     @property
